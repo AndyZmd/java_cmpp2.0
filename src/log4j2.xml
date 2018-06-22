@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <!--这个输出控制台的配置-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--这个是输出日志的格式-->
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Console>
+        <!--这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="RollingFile" fileName="logs/history.log"
+                     filePattern="logs/$${date:yyyy-MM}/history-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout charset="UTF-8" pattern="%d{yyyy-MM-dd 'at' HH:mm:ss z} %-5level %class{36} %L %M - %msg%xEx%n"/>
+            <!--&lt;!&ndash;文件只记录level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）&ndash;&gt;-->
+            <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+            <SizeBasedTriggeringPolicy size="50MB"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="trace">
+            <!--<AppenderRef ref="Console"/>-->
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
